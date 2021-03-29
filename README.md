@@ -105,3 +105,17 @@ There are three types of structures ("structs") that can be created using the `s
 - The classic [C structs](https://en.wikipedia.org/wiki/Struct_(C_programming_language))
 - Unit structs, which are field-less, are useful for generics.
 
+### Enums
+
+The `enum` keyword allows the creation of a type which may be one of a few different variants. Any variant which is valid as a `struct` is also valid as an `enum`.
+
+#### Type aliases
+
+If you use a type alias, you can refer to each enum variant via its alias. This might be useful if the enum's name is too long or too generic, and you want to rename it.
+
+### constants
+
+Rust has two different types of constants which can be declared in any scope including global. Both require explicit type annotation:
+
+- `const`: An unchangeable value (the common case).
+- `static`: A possibly `mut`able variable with [`'static`](https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html) lifetime. The static lifetime is inferred and does not have to be specified. Accessing or modifying a mutable static variable is [`unsafe`](https://doc.rust-lang.org/rust-by-example/unsafe.html).
