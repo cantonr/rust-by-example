@@ -119,3 +119,79 @@ Rust has two different types of constants which can be declared in any scope inc
 
 - `const`: An unchangeable value (the common case).
 - `static`: A possibly `mut`able variable with [`'static`](https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html) lifetime. The static lifetime is inferred and does not have to be specified. Accessing or modifying a mutable static variable is [`unsafe`](https://doc.rust-lang.org/rust-by-example/unsafe.html).
+
+## Variable Bindings
+
+Rust provides type safety via static typing. Variable bindings can be type annotated when declared. However, in most cases, the compiler will be able to infer the type of the variable from the context, heavily reducing the annotation burden.
+
+Values (like literals) can be bound to variables, using the let binding.
+
+### Mutability
+
+Variable bindings are immutable by default, but this can be overridden using the `mut` modifier.
+
+The compiler will throw a detailed diagnostic about mutability errors.
+
+### Scope and Shadowing
+
+Variable bindings have a scope, and are constrained to live in a block. A block is a collection of statements enclosed by braces `{}`. 
+
+### Declare first
+
+It's possible to declare variable bindings first, and initialize them later. However, this form is seldom used, as it may lead to the use of uninitialized variables.
+
+The compiler forbids use of uninitialized variables, as this would lead to undefined behavior.
+
+### Freezing
+
+When data is bound by the same name immutably, it also _freezes_. Frozen data can't be modified until the immutable binding goes out of scope
+
+## Types
+
+Rust provides several mechanisms to change or define the type of primitive and user defined types. The following sections cover:
+
+- [Casting](https://doc.rust-lang.org/rust-by-example/types/cast.html) between primitive types
+- Specifying the desired type of [literals](https://doc.rust-lang.org/rust-by-example/types/literals.html)
+- Using [type inference](https://doc.rust-lang.org/rust-by-example/types/inference.html)
+- [Aliasing](https://doc.rust-lang.org/rust-by-example/types/alias.html) types
+
+### Casting
+
+Rust provides no implicit type conversion (coercion) between primitive types. But, explicit type conversion (casting) can be performed using the `as` keyword.
+
+Rules for converting between integral types follow C conventions generally, except in cases where C has undefined behavior. The behavior of all casts between integral types is well defined in Rust.
+
+### Literals
+
+Numeric literals can be type annotated by adding the type as a suffix. As an example, to specify that the literal `42` should have the type `i32`, write `42i32`.
+
+The type of unsuffixed numeric literals will depend on how they are used. If no constraint exists, the compiler will use `i32` for integers, and `f64` for floating-point numbers.
+
+### Inference
+
+The type inference engine is pretty smart. It does more than looking at the type of the value expression during an initialization. It also looks at how the variable is used afterwards to infer its type. Here's an advanced example of type inference:
+
+```rust
+fn main() {
+    // Because of the annotation, the compiler knows that `elem` has type u8.
+    let elem = 5u8;
+
+    // Create an empty vector (a growable array).
+    let mut vec = Vec::new();
+    // At this point the compiler doesn't know the exact type of `vec`, it
+    // just knows that it's a vector of something (`Vec<_>`).
+
+    // Insert `elem` in the vector.
+    vec.push(elem);
+    // Aha! Now the compiler knows that `vec` is a vector of `u8`s (`Vec<u8>`)
+    // TODO ^ Try commenting out the `vec.push(elem)` line
+
+    println!("{:?}", vec);
+}
+```
+
+### Aliasing
+
+The `type` statement can be used to give a new name to an existing type. Types must have `UpperCamelCase` names, or the compiler will raise a warning. The exception to this rule are the primitive types: `usize`, `f32`, etc.
+
+The main use of aliases is to reduce boilerplate; for example the `IoResult<T>` type is an alias for the `Result<T, IoError>` type.
