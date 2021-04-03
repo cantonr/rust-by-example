@@ -195,3 +195,9 @@ fn main() {
 The `type` statement can be used to give a new name to an existing type. Types must have `UpperCamelCase` names, or the compiler will raise a warning. The exception to this rule are the primitive types: `usize`, `f32`, etc.
 
 The main use of aliases is to reduce boilerplate; for example the `IoResult<T>` type is an alias for the `Result<T, IoError>` type.
+
+## Conversion
+
+Primitive types can be converted to each other through [casting](https://doc.rust-lang.org/rust-by-example/types/cast.html).
+
+Rust addresses conversion between custom types (i.e., `struct` and `enum`) by the use of traits. The generic conversions will use the From and Into traits. However there are more specific ones for the more common cases, in particular when converting to and from `String`s.
